@@ -18,6 +18,6 @@ public class BookDetailsDto {
 
     private List<String> authors;
 
-    private List<Integer> rents;
+    private Boolean isRented;
 
 }

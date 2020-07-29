@@ -2,8 +2,10 @@ package com.github.ricardorv.starter.service;
 
 import com.github.ricardorv.starter.dto.BookDetailsDto;
 import com.github.ricardorv.starter.dto.BookDto;
+import com.github.ricardorv.starter.model.Author;
 import com.github.ricardorv.starter.model.Book;
 import com.github.ricardorv.starter.model.BookRented;
+import com.github.ricardorv.starter.repository.AuthorRepository;
 import com.github.ricardorv.starter.repository.BookRentedRepository;
 import com.github.ricardorv.starter.repository.BookRepository;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,10 +21,12 @@ public class BookService {
 
     final BookRepository bookRepository;
     final BookRentedRepository bookRentedRepository;
+    final AuthorRepository authorRepository;
 
-    public BookService(BookRepository bookRepository, BookRentedRepository bookRentedRepository) {
+    public BookService(BookRepository bookRepository, BookRentedRepository bookRentedRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
         this.bookRentedRepository = bookRentedRepository;
+        this.authorRepository = authorRepository;
     }
 
     public List<BookDto> getBooks(String search) {
@@ -47,23 +51,39 @@ public class BookService {
                 .title(book.getTitle())
                 .authors(book.getAuthors().stream().map(author -> author.getName())
                     .collect(Collectors.toList()))
-                .rents(book.getBookRenteds().stream().map(rent -> rent.getId())
-                    .collect(Collectors.toList()))
                 .build();
     }
 
     @Transactional
     public Integer createBook(BookDto bookDto) {
+
+        Set<Author> authors = new HashSet<>();
+        for (Integer authorId :
+                bookDto.getAuthorsId()) {
+            Optional<Author> authorOpt = authorRepository.findById(authorId);
+            authorOpt.ifPresent(author -> authors.add(author));
+        }
+
         Book book = new Book();
         book.setTitle(bookDto.getTitle());
+        book.setAuthors(authors);
         book = bookRepository.save(book);
         return book.getId();
     }
 
     @Transactional
     public void updateBook(BookDto bookDto) throws EntityNotFoundException {
+
+        Set<Author> authors = new HashSet<>();
+        for (Integer authorId :
+                bookDto.getAuthorsId()) {
+            Optional<Author> authorOpt = authorRepository.findById(authorId);
+            authorOpt.ifPresent(author -> authors.add(author));
+        }
+
         Book book = bookRepository.getOne(bookDto.getId());
         book.setTitle(bookDto.getTitle());
+        book.setAuthors(authors);
         bookRepository.save(book);
     }
 

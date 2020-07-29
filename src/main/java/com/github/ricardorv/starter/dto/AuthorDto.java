@@ -5,19 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 @Data
 @Builder
-public class BookDto {
+public class AuthorDto {
 
-    @ApiModelProperty(hidden = true)
     private Integer id;
     @NotBlank
     @ApiModelProperty(required = true)
-    private String title;
-    @NotBlank
-    @ApiModelProperty(required = true, example = "")
-    private List<Integer> authorsId;
+    private String name;
 
 }
