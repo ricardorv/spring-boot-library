@@ -10,3 +10,9 @@
 
     http://localhost:8080/swagger-ui.html
     
+#### Acesso banco de dados em memória
+
+    http://localhost:8080/h2
+    JDBC URL: jdbc:h2:mem:testdb
+    USERNAME: sa
+    PASSWORD: 
