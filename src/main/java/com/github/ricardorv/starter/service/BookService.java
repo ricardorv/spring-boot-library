@@ -46,11 +46,17 @@ public class BookService {
 
     public BookDetailsDto getBookById(Integer id) throws EntityNotFoundException {
         Book book = bookRepository.getOne(id);
+
+        Optional<BookRented> bookRented = bookRentedRepository
+                .findByBookIdAndReturnedDate(id, null);
+
         return BookDetailsDto.builder()
                 .id(book.getId())
                 .title(book.getTitle())
                 .authors(book.getAuthors().stream().map(author -> author.getName())
                     .collect(Collectors.toList()))
+                .isRented(bookRented.isPresent())
+                .rentedDate(bookRented.map(BookRented::getRentedDate).orElse(null))
                 .build();
     }
 
@@ -88,7 +94,15 @@ public class BookService {
     }
 
     @Transactional
-    public void rent(Integer idBook) throws EntityNotFoundException {
+    public void rentBook(Integer idBook) throws EntityNotFoundException, Exception {
+
+        Optional<BookRented> bookRentedOpt = bookRentedRepository
+                .findByBookIdAndReturnedDate(idBook, null);
+
+        if (bookRentedOpt.isPresent()) {
+            throw new Exception("Book already rented");
+        }
+
         Book book = bookRepository.getOne(idBook);
         BookRented bookRented = new BookRented();
         bookRented.setBook(book);
@@ -97,8 +111,37 @@ public class BookService {
     }
 
     @Transactional
-    public void deleteBook(Integer id) throws EntityNotFoundException {
+    public void returnBook(Integer idBook) throws EntityNotFoundException, Exception {
+
+        Optional<BookRented> bookRentedOpt = bookRentedRepository
+                .findByBookIdAndReturnedDate(idBook, null);
+
+        if (!bookRentedOpt.isPresent()) {
+            throw new Exception("Book already returned");
+        }
+
+        BookRented bookRented = bookRentedOpt.get();
+        bookRented.setReturnedDate(LocalDateTime.now());
+        bookRentedRepository.save(bookRented);
+    }
+
+    @Transactional
+    public void deleteBook(Integer id) throws EntityNotFoundException, Exception {
+
+        Optional<BookRented> bookRentedOpt = bookRentedRepository
+                .findByBookIdAndReturnedDate(id, null);
+
+        if (bookRentedOpt.isPresent()) {
+            throw new Exception("Book is rented");
+        }
+
         Book book = bookRepository.getOne(id);
+
+        for (BookRented bookRented :
+                book.getBookRenteds()) {
+            bookRentedRepository.delete(bookRented);
+        }
+
         bookRepository.delete(book);
     }
 

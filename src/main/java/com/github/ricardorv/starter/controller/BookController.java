@@ -39,12 +39,18 @@ public class BookController {
     }
 
     @DeleteMapping("/book/{id}")
-    public void deleteBook(@PathVariable("id") Integer id) {
+    public void deleteBook(@PathVariable("id") Integer id) throws Exception {
         bookService.deleteBook(id);
     }
 
     @PostMapping("/book/{id}/rent")
-    public void postProductImage(@PathVariable("id") Integer id) {
-        bookService.rent(id);
+    public void postBookRent(@PathVariable("id") Integer id) throws Exception {
+        bookService.rentBook(id);
     }
+
+    @PostMapping("/book/{id}/return")
+    public void postBookReturn(@PathVariable("id") Integer id) throws Exception {
+        bookService.returnBook(id);
+    }
+
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,5 +20,6 @@ public class BookDetailsDto {
     private List<String> authors;
 
     private Boolean isRented;
+    private LocalDateTime rentedDate;
 
 }
