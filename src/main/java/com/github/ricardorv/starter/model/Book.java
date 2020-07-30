@@ -28,6 +28,13 @@ public class Book {
     public Book() {
     }
 
+    public Book(Integer id, String title, Set<Author> authors, Set<BookRented> bookRenteds) {
+        this.id = id;
+        this.title = title;
+        this.authors = authors;
+        this.bookRenteds = bookRenteds;
+    }
+
     public Integer getId() {
         return id;
     }

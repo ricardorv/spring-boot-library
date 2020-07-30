@@ -54,6 +54,7 @@ public class BookService {
                 .id(book.getId())
                 .title(book.getTitle())
                 .authors(book.getAuthors().stream().map(author -> author.getName())
+                        .sorted(String::compareTo)
                     .collect(Collectors.toList()))
                 .isRented(bookRented.isPresent())
                 .rentedDate(bookRented.map(BookRented::getRentedDate).orElse(null))
