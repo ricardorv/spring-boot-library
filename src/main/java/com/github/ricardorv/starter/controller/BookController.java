@@ -3,6 +3,8 @@ package com.github.ricardorv.starter.controller;
 import com.github.ricardorv.starter.dto.BookDetailsDto;
 import com.github.ricardorv.starter.dto.BookDto;
 import com.github.ricardorv.starter.service.BookService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,28 +31,33 @@ public class BookController {
     }
 
     @PostMapping("/book")
-    public void postBook(@RequestBody BookDto product) {
+    public ResponseEntity postBook(@RequestBody BookDto product) {
         bookService.createBook(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Book created");
     }
 
     @PutMapping("/book")
-    public void putBook(@RequestBody BookDto product) {
+    public ResponseEntity putBook(@RequestBody BookDto product) {
         bookService.updateBook(product);
+        return ResponseEntity.status(HttpStatus.OK).body("Book updated");
     }
 
     @DeleteMapping("/book/{id}")
-    public void deleteBook(@PathVariable("id") Integer id) throws Exception {
+    public ResponseEntity deleteBook(@PathVariable("id") Integer id) throws Exception {
         bookService.deleteBook(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Book deleted");
     }
 
     @PostMapping("/book/{id}/rent")
-    public void postBookRent(@PathVariable("id") Integer id) throws Exception {
+    public ResponseEntity postBookRent(@PathVariable("id") Integer id) throws Exception {
         bookService.rentBook(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Book rented");
     }
 
     @PostMapping("/book/{id}/return")
-    public void postBookReturn(@PathVariable("id") Integer id) throws Exception {
+    public ResponseEntity postBookReturn(@PathVariable("id") Integer id) throws Exception {
         bookService.returnBook(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Book returned");
     }
 
 }

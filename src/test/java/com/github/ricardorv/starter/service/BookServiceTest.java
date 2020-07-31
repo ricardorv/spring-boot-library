@@ -15,9 +15,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.EntityNotFoundException;
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -118,7 +118,7 @@ public class BookServiceTest {
             exception = ex;
         }
         Assertions.assertNotNull(exception);
-        Assertions.assertEquals(EntityNotFoundException.class, exception.getClass());
+        Assertions.assertEquals(ResponseStatusException.class, exception.getClass());
     }
 
     @Test
