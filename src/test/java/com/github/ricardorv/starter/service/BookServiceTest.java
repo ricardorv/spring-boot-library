@@ -71,6 +71,9 @@ public class BookServiceTest {
         Optional<BookRented> bookRentedOpt = Optional.ofNullable(bookRented);
         doReturn(bookRentedOpt).when(bookRentedRepository).findByBookIdAndReturnedDate(any(), any());
 
+        doReturn(Optional.ofNullable(new Author(1, "Author"))).when(authorRepository).findById(any());
+        doReturn(new Book(1, null, null, null)).when(bookRepository).save(any());
+
         bookService = new BookService(bookRepository, bookRentedRepository, authorRepository);
     }
 
@@ -116,6 +119,17 @@ public class BookServiceTest {
         }
         Assertions.assertNotNull(exception);
         Assertions.assertEquals(EntityNotFoundException.class, exception.getClass());
+    }
+
+    @Test
+    public void testCreateBook() {
+        List<Integer> authorsId = new ArrayList<>();
+        authorsId.add(1);
+        Integer bookId = bookService.createBook(BookDto.builder()
+                .title("Book")
+                .authorsId(authorsId)
+                .build());
+        Assertions.assertEquals(1, bookId);
     }
 
 }

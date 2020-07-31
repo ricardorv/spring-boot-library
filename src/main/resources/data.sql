@@ -14,3 +14,7 @@ INSERT INTO book_author(id_book, id_author) VALUES
 
 INSERT INTO book_rented(id, id_book, rented_date) VALUES
     (1, 1, '2020-07-28 21:13:58.365');
+
+INSERT INTO user (id_user, username, password, roles) VALUES
+    (1, 'admin', 'admin', 'ADMIN'),
+    (2, 'dev', 'dev', 'DEV');

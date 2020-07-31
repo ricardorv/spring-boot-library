@@ -6,6 +6,11 @@
     cd spring-boot-library
     ./mvnw spring-boot:run
     
+#### Usuários disponíveis para login
+
+ - admin:admin
+ - dev:dev (possui acesso ao swagger e h2)    
+
 #### Documentação da API:
 
     http://localhost:8080/swagger-ui.html
